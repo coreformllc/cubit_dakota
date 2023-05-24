@@ -7,11 +7,11 @@ sys.path.append( "/home/greg/apps/seacas/lib" )
 import exodus
 
 def doIndenter( geom_params ):
-    base = exodus.exodus( "/home/greg/projects/cubit_dakota/indenter/indenter.e", array_type='numpy', mode="r" )
-    E = base.copy( "/home/greg/projects/cubit_dakota/indenter/indenter_mesh.e", mode="a" )
+    base = exodus.exodus( "indenter.e", array_type='numpy', mode="r" )
+    E = base.copy( "indenter_mesh.e", mode="a" )
     base.close()
     E.close()
-    E = exodus.exodus( "/home/greg/projects/cubit_dakota/indenter/indenter_mesh.e", array_type='numpy', mode="a" )
+    E = exodus.exodus( "indenter_mesh.e", array_type='numpy', mode="a" )
 
     numNodes = E.num_nodes()
     nCoords = numpy.array( E.get_coords() )
@@ -37,11 +37,11 @@ def doIndenter( geom_params ):
 def doTarget( geom_params ):
     tipRadius = geom_params[ 'tip_radius' ]
 
-    base = exodus.exodus( "/home/greg/projects/cubit_dakota/indenter/target.e", array_type='numpy', mode="r" )
-    E = base.copy( "/home/greg/projects/cubit_dakota/indenter/target_mesh.e", mode="a" )
+    base = exodus.exodus( "target.e", array_type='numpy', mode="r" )
+    E = base.copy( "target_mesh.e", mode="a" )
     base.close()
     E.close()
-    E = exodus.exodus( "/home/greg/projects/cubit_dakota/indenter/target_mesh.e", array_type='numpy', mode="a" )
+    E = exodus.exodus( "target_mesh.e", array_type='numpy', mode="a" )
 
     numNodes = E.num_nodes()
     nCoords = numpy.array( E.get_coords() )

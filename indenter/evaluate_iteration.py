@@ -34,15 +34,19 @@ def readParamFile( paramFile ):
                "shaft_radius":   float( fLines[1].strip() ),
                "shaft_standoff": float( fLines[2].strip() ),
                "wedge_angle":    float( fLines[3].strip() ) }
+    # Fixed values
+    params[ "target_width" ] = 60
+    params[ "target_height" ] = 60
     return params
 
 def build_model( params ):
     spherical_nanoindenter.main( params )
 
 def submit_moose( ):
+    mpi = "/home/greg/mambaforge3/envs/moose/bin/mpiexec"
     executable = "/home/greg/projects/struct_mech/struct_mech-opt"
     argument = "-i indenter_power_law.i"
-    status = subprocess.run( f"{executable} {argument} > moose.out 2>moose.err", shell=True, check=True )
+    status = subprocess.run( f"{mpi} -np 4 {executable} {argument} > moose.out 2>moose.err", shell=True, check=True )
 
 def compute_objective( ):
     filename = "indenter_power_law_out.e"

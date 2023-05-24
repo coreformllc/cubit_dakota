@@ -82,6 +82,8 @@ def build_indenter( geom_params ):
     cubit.cmd( "export mesh 'indenter.e' overwrite")
 
 def build_target( geom_params ):
+    target_width = geom_params[ "target_width" ]
+    target_height = geom_params[ "target_height" ]
     cubit.cmd( "reset" )
     cubit.cmd( f"create surface rectangle width {target_width} height {target_height} zplane" )
     cubit.cmd( f"move surface 1 x {target_width / 2.0} y {-1.0 * target_width / 2.0}" )
