@@ -67,14 +67,14 @@
 [./symm_x_indenter]
   type = DirichletBC
   variable = disp_x
-  boundary = 5
+  boundary = 'indenter_axis'
   value = 0.0
 [../]
 
 [./symm_x_material]
   type = DirichletBC
   variable = disp_x
-  boundary = 9
+  boundary = 'target_left'
   value = 0.0
 [../]
 
@@ -82,7 +82,7 @@
 [./material_base_y]
   type = DirichletBC
   variable = disp_y
-  boundary = 8
+  boundary = 'target_bot'
   value = 0.0
 [../]
 
@@ -90,7 +90,7 @@
 [./disp_y]
   type = FunctionDirichletBC
   variable = disp_y
-  boundary = 1
+  boundary = 'indenter_top'
   function = disp_y
 [../]
 
@@ -99,8 +99,8 @@
 
 [Contact]
   [./dummy_name]
-    primary = 6
-    secondary = 4
+    primary = 'target_top'
+    secondary = 'indenter_tip'
     model = coulomb
     formulation = penalty
     normalize_penalty = true
@@ -114,8 +114,8 @@
 [Dampers]
   [./contact_slip]
     type = ContactSlipDamper
-    secondary = 4
-    primary = 6
+    secondary = 'indenter_tip'
+    primary = 'target_top'
   [../]
 []
 
@@ -178,15 +178,20 @@
 []
 
 [Postprocessors]
-  #[./maxdisp]
-  #  type = NodalVariableValue
-  #  nodeid = 39 # 40-1 where 40 is the exodus node number
-  #  variable = disp_y
-  #[../]
+  [./indenter_disp]
+    type = NodalExtremeValue
+    boundary = 'indenter_tip_node'
+    variable = disp_y
+  [../]
+  [./target_depth]
+    type = NodalExtremeValue
+    boundary = 'target_depth_node'
+    variable = disp_y
+  [../]
   [resid_y]
     type = NodalSum
     variable = saved_y
-    boundary = 1
+    boundary = 'indenter_top'
   []
   [react_y]
     type = SidesetReaction

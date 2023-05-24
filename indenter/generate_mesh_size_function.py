@@ -6,7 +6,7 @@ import numpy
 sys.path.append( "/home/greg/apps/seacas/lib" )
 import exodus
 
-def doIndenter():
+def doIndenter( geom_params ):
     base = exodus.exodus( "/home/greg/projects/cubit_dakota/indenter/indenter.e", array_type='numpy', mode="r" )
     E = base.copy( "/home/greg/projects/cubit_dakota/indenter/indenter_mesh.e", mode="a" )
     base.close()
@@ -34,8 +34,8 @@ def doIndenter():
     E.put_node_variable_values( "meshSize", 1, meshSize )
     E.close()
 
-def doTarget():
-    layerDepth = 5.0
+def doTarget( geom_params ):
+    tipRadius = geom_params[ 'tip_radius' ]
 
     base = exodus.exodus( "/home/greg/projects/cubit_dakota/indenter/target.e", array_type='numpy', mode="r" )
     E = base.copy( "/home/greg/projects/cubit_dakota/indenter/target_mesh.e", mode="a" )
@@ -50,8 +50,8 @@ def doTarget():
     maxDist = max( dist )
 
     for i in range( 0, len( nCoords[0] ) ):
-        if nCoords[1][i] < -1.0 * layerDepth:
-            meshSize[i] = ( dist[i] - layerDepth ) / ( maxDist - layerDepth )
+        if dist[i] > tipRadius:
+            meshSize[i] = ( dist[i] - tipRadius ) / ( maxDist - tipRadius )
     
     E.put_time( 1, 0.0 )
     exodus.add_variables( E, nodal_vars = ["meshSize"] )
@@ -59,5 +59,10 @@ def doTarget():
     E.close()
 
 if __name__ == "__main__":
-    doIndenter()
-    doTarget()
+    geom_params = { "tip_radius": 10, "shaft_radius": 25, "shaft_standoff": 10, "wedge_angle": numpy.deg2rad( 20 ) }
+    geom_params['target_width'] = 1.5 * geom_params['shaft_radius']
+    geom_params['target_height'] = geom_params['target_width']
+    target_width = geom_params[ "target_width" ]
+    target_height = geom_params[ "target_height" ]
+    doIndenter( geom_params )
+    doTarget( geom_params )

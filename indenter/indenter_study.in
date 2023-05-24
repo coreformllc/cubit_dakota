@@ -1,0 +1,69 @@
+##### SPECIFY THE ENVIRONMENT #####
+environment
+	top_method_pointer = "Efficient_Global_Optimization"
+	tabular_data
+		tabular_data_file "tabular.data"
+	output_file "dakota.out"
+	error_file "dakota.err"
+	write_restart "dakota.rst"
+
+##### DEFINE GLOBAL OPTIMIZATION METHODS #####
+method
+	id_method "Efficient_Global_Optimization"
+	efficient_global
+		model_pointer "modelGlobal"
+		initial_samples = 4
+		convergence_tolerance = 1e-12
+		x_conv_tol = 1.e-12
+		max_iterations = 10
+		export_approx_points_file = "surrogate_points.data"
+			annotated
+	final_solutions = 1
+	output verbose
+
+##### DEFINE MODEL SPECIFICATIONS #####
+model
+	id_model "modelGlobal"
+	single
+		interface_pointer "interface"
+	variables_pointer "variables"
+	responses_pointer "responsesGlobal"
+
+##### DEFINE INDEPENDENT VARIABLES #####
+variables
+	id_variables "variables"
+	continuous_design 4
+		initial_point 10 25 10 20
+		lower_bounds  2.5 5 5 1
+		upper_bounds  20 40 20 45 
+		descriptors   "tip_radius" "shaft_radius" "shaft_standoff" "wedge_angle"
+
+##### DEFINE THE DAKOTA<->SIMULATION INTERFACE #####
+interface
+	id_interface "interface"
+	analysis_drivers "python3 -m dakota_interface"
+		fork
+			parameters_file "params.in"
+			results_file "results.out"
+			work_directory
+				named "workdir/run"
+				directory_tag
+				directory_save
+                link_files "evaluate_iteration.py" "qoi.py" "dakota_interface.py" "spherical_nanoindenter.py" "generate_mesh_size_function.py" "indenter_power_law.i"
+				copy_files "params.template"
+	failure_capture 
+		recover = 0.0
+	asynchronous
+		evaluation_concurrency 1
+
+##### DEFINE THE RESPONSE VARIABLES #####
+responses
+	id_responses "responsesGlobal"
+	objective_functions = 1
+		sense "minimize"
+		scalar_objectives 1
+		nonlinear_inequality_constraints 1
+			upper_bounds = 1e7
+	descriptors "final_depth" "reaction_force"
+	no_gradients
+	no_hessians

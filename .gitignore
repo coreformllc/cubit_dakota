@@ -1,3 +1,23 @@
+## CUBIT GITIGNORE
+*.jou
+*.cub
+*.cub5
+
+## EXODUS GITIGNORE
+*.e
+*.e.*
+
+## MOOSE GITIGNORE
+*.csv
+
+## DAKOTA GITIGNORE
+*.out
+*.err
+*.rst
+*.data
+**/workdir
+
+## PYTHON DEFAULT GITIGNORE
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
