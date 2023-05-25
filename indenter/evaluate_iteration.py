@@ -66,7 +66,7 @@ def compute_constraint( ):
 
 def write_results( results, resFile ):
     f = open( resFile, "w+" )
-    f.write( f"final_depth {results['Objective']}\n" )
+    f.write( f"depth_error {results['Objective']}\n" )
     f.write( f"reaction_force {results['Constraint']}\n" )
     f.close()
 

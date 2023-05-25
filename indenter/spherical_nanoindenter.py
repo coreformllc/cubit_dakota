@@ -19,6 +19,9 @@ def build_indenter( geom_params ):
     shaft_radius = tip_radius * shaft_radius_ratio
     shaft_standoff = geom_params[ "shaft_standoff" ]
     wedge_angle = numpy.deg2rad( geom_params[ "wedge_angle" ] )
+    
+    min_mesh_size = geom_params[ "tip_radius" ] / 40.0
+    max_mesh_size = min_mesh_size * 20.0
 
     x = numpy.zeros( 6 )
     y = numpy.zeros( 6 )
@@ -49,20 +52,23 @@ def build_indenter( geom_params ):
     cubit.cmd( "create curve vertex 6 1" )
     cubit.cmd( "create surface curve all" )
 
-    cubit.cmd( "sideset 1 curve 4" )
-    cubit.cmd( "sideset 2 curve 3" )
-    cubit.cmd( "sideset 3 curve 2" )
-    cubit.cmd( "sideset 4 curve 1" )
-    cubit.cmd( "sideset 5 curve 5" )
-    cubit.cmd( "sideset 100 curve all" )
-    cubit.cmd( "sideset 1 name 'indenter_top'")
-    cubit.cmd( "sideset 2 name 'indenter_standoff'")
-    cubit.cmd( "sideset 3 name 'indenter_wedge'")
-    cubit.cmd( "sideset 4 name 'indenter_tip'")
-    cubit.cmd( "sideset 5 name 'indenter_axis'")
-    cubit.cmd( "sideset 100 name 'indenter_boundaries'")
-    cubit.cmd( "nodeset 10 vertex 1" )
-    cubit.cmd( "nodeset 10 name 'indenter_tip_node'")
+    cubit.cmd( "sideset 11 curve 4" )
+    cubit.cmd( "sideset 12 curve 3" )
+    cubit.cmd( "sideset 13 curve 2" )
+    cubit.cmd( "sideset 14 curve 1" )
+    cubit.cmd( "sideset 15 curve 5" )
+    cubit.cmd( "sideset 16 curve in sideset 13 14" )
+    cubit.cmd( "sideset 17 curve all" )
+    cubit.cmd( "nodeset 101 vertex 1" )
+
+    cubit.cmd( "sideset 11 name 'indenter_top'")
+    cubit.cmd( "sideset 12 name 'indenter_standoff'")
+    cubit.cmd( "sideset 13 name 'indenter_wedge'")
+    cubit.cmd( "sideset 14 name 'indenter_tip'")
+    cubit.cmd( "sideset 15 name 'indenter_axis'")
+    cubit.cmd( "sideset 16 name 'indenter_contact_surfaces'")
+    cubit.cmd( "sideset 17 name 'indenter_boundaries'")
+    cubit.cmd( "nodeset 101 name 'indenter_tip_node'")
 
     cubit.cmd( "delete vertex all" )
     cubit.cmd( "compress" )
@@ -79,7 +85,7 @@ def build_indenter( geom_params ):
     generate_mesh_size_function.doIndenter( geom_params )
     cubit.cmd( "delete mesh" )
     cubit.cmd( "import sizing function 'indenter_mesh.e' block 1 variable 'meshSize' time 0.0" )
-    cubit.cmd( "surface 1 sizing function exodus min_size 0.25 max_size 5.0" )
+    cubit.cmd( f"surface 1 sizing function exodus min_size {min_mesh_size} max_size {max_mesh_size}" )
     cubit.cmd( "mesh surface indenter" )
     cubit.cmd( "save cub5 'indenter.cub5' overwrite")
     cubit.cmd( "export mesh 'indenter.e' overwrite")
@@ -88,23 +94,26 @@ def build_indenter( geom_params ):
 def build_target( geom_params ):
     target_width = geom_params[ "target_width" ]
     target_height = geom_params[ "target_height" ]
+    min_mesh_size = geom_params[ "tip_radius" ] / 40.0
+    max_mesh_size = min_mesh_size * 20.0
+
     cubit.cmd( "reset" )
     cubit.cmd( f"create surface rectangle width {target_width} height {target_height} zplane" )
     cubit.cmd( f"move surface 1 x {target_width / 2.0} y {-1.0 * target_width / 2.0}" )
 
-    cubit.cmd( "sideset 6 curve 1" )
-    cubit.cmd( "sideset 7 curve 2" )
-    cubit.cmd( "sideset 8 curve 3" )
-    cubit.cmd( "sideset 9 curve 4" )
-    cubit.cmd( "sideset 200 curve 1 2 3 4" )
-    cubit.cmd( "nodeset 20 vertex 2" )
+    cubit.cmd( "sideset 21 curve 1" )
+    cubit.cmd( "sideset 22 curve 2" )
+    cubit.cmd( "sideset 23 curve 3" )
+    cubit.cmd( "sideset 24 curve 4" )
+    cubit.cmd( "sideset 25 curve 1 2 3 4" )
+    cubit.cmd( "nodeset 201 vertex 2" )
 
-    cubit.cmd( "sideset 6 name 'target_top'" )
-    cubit.cmd( "sideset 7 name 'target_right'" )
-    cubit.cmd( "sideset 8 name 'target_bot'" )
-    cubit.cmd( "sideset 9 name 'target_left'" )
-    cubit.cmd( "sideset 200 name 'target_boundaries'" )
-    cubit.cmd( "nodeset 20 name 'target_depth_node'")
+    cubit.cmd( "sideset 21 name 'target_top'" )
+    cubit.cmd( "sideset 22 name 'target_right'" )
+    cubit.cmd( "sideset 23 name 'target_bot'" )
+    cubit.cmd( "sideset 24 name 'target_left'" )
+    cubit.cmd( "sideset 25 name 'target_boundaries'" )
+    cubit.cmd( "nodeset 201 name 'target_depth_node'")
 
     cubit.cmd( "surface 1 scheme pave" )
     cubit.cmd( "surface 1 size 0.25" )
@@ -117,7 +126,7 @@ def build_target( geom_params ):
     generate_mesh_size_function.doTarget( geom_params )
     cubit.cmd( "delete mesh" )
     cubit.cmd( "import sizing function 'target_mesh.e' block 2 variable 'meshSize' time 0.0" )
-    cubit.cmd( "surface 1 sizing function exodus min_size 0.25 max_size 5.0" )
+    cubit.cmd( f"surface 1 sizing function exodus min_size {min_mesh_size} max_size {max_mesh_size}" )
     cubit.cmd( "mesh surface 1" )
     cubit.cmd( "save cub5 'target.cub5' overwrite")
     cubit.cmd( "export mesh 'target.e' overwrite")

@@ -62,7 +62,7 @@ mdl_in_path = "params.template"
 mdl_out_option = mdl_out_option_output_file
 qois = [
     qoi.QoiAnchor("reaction_force", 1, qoi.FIELDS, 1, qoi.FIELDS, qoi.AFTER, "reaction_force"),
-    qoi.QoiAnchor("final_depth", 1, qoi.FIELDS, 1, qoi.FIELDS, qoi.AFTER, "final_depth"),
+    qoi.QoiAnchor("depth_error", 1, qoi.FIELDS, 1, qoi.FIELDS, qoi.AFTER, "depth_error"),
 ]
 
 cmd_line = "python3 evaluate_iteration.py ${input_file} ${output_file}"

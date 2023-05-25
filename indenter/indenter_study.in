@@ -65,6 +65,6 @@ responses
 		scalar_objectives 1
 		nonlinear_inequality_constraints 1
 			upper_bounds = 1e7
-	descriptors "final_depth" "reaction_force"
+	descriptors "depth_error" "reaction_force"
 	no_gradients
 	no_hessians

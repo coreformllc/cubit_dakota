@@ -51,7 +51,7 @@
   [./all]
     add_variables = true
     strain = FINITE
-    block = '1 2'
+    block = 'indenter material_target'
     use_automatic_differentiation = false
     generate_output = 'stress_xx stress_xy stress_xz stress_yy stress_zz'
     save_in = 'saved_x saved_y'
@@ -105,7 +105,7 @@
     formulation = penalty
     normalize_penalty = true
     friction_coefficient = 0.5
-    penalty = 1e8
+    penalty = 2e7
     tangential_tolerance = 0.005
   [../]
 []
@@ -122,18 +122,18 @@
 [Materials]
   [./tensor]
     type = ComputeIsotropicElasticityTensor
-    block = '1'
+    block = 'indenter'
     youngs_modulus = 1.0e7
     poissons_ratio = 0.25
   [../]
   [./stress]
     type = ComputeFiniteStrainElasticStress
-    block = '1'
+    block = 'indenter'
   [../]
 
   [./tensor_2]
     type = ComputeIsotropicElasticityTensor
-    block = '2'
+    block = 'material_target'
     youngs_modulus = 1e6
     poissons_ratio = 0.0
   [../]
@@ -142,13 +142,13 @@
     type = IsotropicPowerLawHardeningStressUpdate
     strength_coefficient = 1e5 #K
     strain_hardening_exponent = 0.5 #n
-    block = '2'
+    block = 'material_target'
   [../]
   [./radial_return_stress]
     type = ComputeMultipleInelasticStress
     inelastic_models = 'power_law_hardening'
     tangent_operator = elastic
-    block = '2'
+    block = 'material_target'
   [../]
 
 []
