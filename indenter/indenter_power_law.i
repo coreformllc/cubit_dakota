@@ -99,13 +99,13 @@
 
 [Contact]
   [./dummy_name]
-    primary = 'target_top'
-    secondary = 'indenter_tip'
+    primary = 'indenter_contact_surfaces'
+    secondary = 'target_top'
     model = coulomb
     formulation = penalty
     normalize_penalty = true
     friction_coefficient = 0.5
-    penalty = 2e7
+    penalty = 1e8
     tangential_tolerance = 0.005
   [../]
 []
@@ -114,8 +114,8 @@
 [Dampers]
   [./contact_slip]
     type = ContactSlipDamper
-    secondary = 'indenter_tip'
-    primary = 'target_top'
+    primary = 'indenter_contact_surfaces'
+    secondary = 'target_top'
   [../]
 []
 

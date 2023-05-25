@@ -16,7 +16,7 @@ def doIndenter( geom_params ):
     numNodes = E.num_nodes()
     nCoords = numpy.array( E.get_coords() )
     meshSize = numpy.zeros( numNodes )
-    nodesInContactSideset = numpy.unique( E.get_side_set_node_list( 4 )[1] )
+    nodesInContactSideset = numpy.unique( E.get_side_set_node_list( 14 )[1] )
     maxY = max( nCoords[1] )
     contactMaxY = -float( "inf" )
     for i in range( 0, len( nodesInContactSideset ) ):

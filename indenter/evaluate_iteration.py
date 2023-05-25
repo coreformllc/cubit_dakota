@@ -9,12 +9,6 @@ from math import *
 # Local imports
 import spherical_nanoindenter
 
-# Import Cubit Python
-pathToCubit = "/opt/Coreform-Cubit-2023.4/bin"
-sys.path.append( pathToCubit )
-import cubit
-cubit.init( [ "cubit", "-nobanner", "-nographics", "-commandplugindir", "/home/gvernon2/cf/master/build/bin/Release" ] )
-
 # Import Exodus Python
 sys.path.append( "/home/greg/apps/seacas/lib" )
 import exodus
@@ -25,7 +19,7 @@ def main( paramFile, objFile ):
     status = submit_moose( )
     obj = compute_objective( )
     con = compute_constraint( )
-    write_results( { "Objective": obj, "Constraint": con }, objFile )
+    write_results( { "status": status, "Objective": obj, "Constraint": con }, objFile )
 
 def readParamFile( paramFile ):
     f = open( paramFile, 'r' )
@@ -46,7 +40,8 @@ def submit_moose( ):
     mpi = "/home/greg/mambaforge3/envs/moose/bin/mpiexec"
     executable = "/home/greg/projects/struct_mech/struct_mech-opt"
     argument = "-i indenter_power_law.i"
-    status = subprocess.run( f"{mpi} -np 4 {executable} {argument} > moose.out 2>moose.err", shell=True, check=True )
+    status = subprocess.run( f"{mpi} -np 4 {executable} {argument} > moose.out 2>moose.err", shell=True, check=False )
+    return status
 
 def compute_objective( ):
     filename = "indenter_power_law_out.e"
@@ -67,11 +62,8 @@ def compute_constraint( ):
 def write_results( results, resFile ):
     f = open( resFile, "w+" )
     f.write( f"depth_error {results['Objective']}\n" )
-    f.write( f"reaction_force {results['Constraint']}\n" )
+    f.write( f"reaction_force {results['Constraint']}" )
     f.close()
-
-def list_to_str( input_list ):
-    return " ".join( [ str(val) for val in input_list ] )
 
 if __name__ == "__main__":
     print( sys.argv )

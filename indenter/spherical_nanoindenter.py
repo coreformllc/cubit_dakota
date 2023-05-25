@@ -6,6 +6,7 @@ import generate_mesh_size_function
 
 sys.path.append( "/opt/Coreform-Cubit-2023.4/bin" )
 import cubit
+cubit.init( [ "cubit", "-nobanner", "-nographics" ] )
 
 def main( geom_params ):
     build_indenter( geom_params )
@@ -21,7 +22,7 @@ def build_indenter( geom_params ):
     wedge_angle = numpy.deg2rad( geom_params[ "wedge_angle" ] )
     
     min_mesh_size = geom_params[ "tip_radius" ] / 40.0
-    max_mesh_size = min_mesh_size * 20.0
+    max_mesh_size = numpy.min( [ min_mesh_size * 20.0, shaft_radius / 4.0 ] )
 
     x = numpy.zeros( 6 )
     y = numpy.zeros( 6 )
@@ -95,7 +96,7 @@ def build_target( geom_params ):
     target_width = geom_params[ "target_width" ]
     target_height = geom_params[ "target_height" ]
     min_mesh_size = geom_params[ "tip_radius" ] / 40.0
-    max_mesh_size = min_mesh_size * 20.0
+    max_mesh_size = 5.0
 
     cubit.cmd( "reset" )
     cubit.cmd( f"create surface rectangle width {target_width} height {target_height} zplane" )
