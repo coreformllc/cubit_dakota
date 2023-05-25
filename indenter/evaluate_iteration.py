@@ -31,7 +31,7 @@ def readParamFile( paramFile ):
     f = open( paramFile, 'r' )
     fLines = f.readlines()
     params = { "tip_radius":     float( fLines[0].strip() ),
-               "shaft_radius":   float( fLines[1].strip() ),
+               "shaft_radius_ratio":   float( fLines[1].strip() ),
                "wedge_angle":    float( fLines[2].strip() ) }
     # Fixed values
     params[ "shaft_standoff" ] = 10
@@ -53,7 +53,7 @@ def compute_objective( ):
     E = exodus.exodus( filename, array_type="numpy", mode="r" )
     target_depth = E.get_global_variable_values( "target_depth" )
     E.close()
-    objective = target_depth[-1]
+    objective = abs( -1.5 - target_depth[-1] )
     return objective
 
 def compute_constraint( ):

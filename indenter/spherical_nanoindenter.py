@@ -15,7 +15,8 @@ def main( geom_params ):
 def build_indenter( geom_params ):
     cubit.cmd( "reset" )
     tip_radius = geom_params[ "tip_radius" ]
-    shaft_radius = geom_params[ "shaft_radius" ]
+    shaft_radius_ratio = geom_params[ "shaft_radius_ratio" ]
+    shaft_radius = tip_radius * shaft_radius_ratio
     shaft_standoff = geom_params[ "shaft_standoff" ]
     wedge_angle = numpy.deg2rad( geom_params[ "wedge_angle" ] )
 
@@ -131,8 +132,8 @@ def build_assembly( ):
     cubit.cmd( "reset" )
 
 if __name__ == "__main__":
-    geom_params = { "tip_radius": 10, "shaft_radius": 25, "shaft_standoff": 10, "wedge_angle": numpy.deg2rad( 20 ) }
-    geom_params['target_width'] = 1.5 * geom_params['shaft_radius']
+    geom_params = { "tip_radius": 10, "shaft_radius_ratio": 2.0, "shaft_standoff": 10, "wedge_angle": numpy.deg2rad( 20 ) }
+    geom_params['target_width'] = 1.5 * geom_params['shaft_radius_ratio']
     geom_params['target_height'] = geom_params['target_width']
     target_width = geom_params[ "target_width" ]
     target_height = geom_params[ "target_height" ]

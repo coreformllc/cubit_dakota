@@ -33,10 +33,11 @@ model
 variables
 	id_variables "variables"
 	continuous_design 3
-		initial_point 10 25 20
-		lower_bounds  2.5 5 1
-		upper_bounds  20 40 45 
-		descriptors   "tip_radius" "shaft_radius" "wedge_angle"
+		descriptors   "tip_radius" "shaft_radius_ratio" "wedge_angle"
+            initial_point 10.0  1.50  20.0
+	    	lower_bounds   2.5  1.05   1.0
+		    upper_bounds  20.0  2.00  45.0 
+	
 
 ##### DEFINE THE DAKOTA<->SIMULATION INTERFACE #####
 interface
@@ -52,7 +53,7 @@ interface
                 link_files "evaluate_iteration.py" "qoi.py" "dakota_interface.py" "spherical_nanoindenter.py" "generate_mesh_size_function.py" "indenter_power_law.i"
 				copy_files "params.template"
 	failure_capture 
-		recover = 0.0
+		recover = 2.0
 	asynchronous
 		evaluation_concurrency 1
 
