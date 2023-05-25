@@ -32,11 +32,11 @@ model
 ##### DEFINE INDEPENDENT VARIABLES #####
 variables
 	id_variables "variables"
-	continuous_design 4
-		initial_point 10 25 10 20
-		lower_bounds  2.5 5 5 1
-		upper_bounds  20 40 20 45 
-		descriptors   "tip_radius" "shaft_radius" "shaft_standoff" "wedge_angle"
+	continuous_design 3
+		initial_point 10 25 20
+		lower_bounds  2.5 5 1
+		upper_bounds  20 40 45 
+		descriptors   "tip_radius" "shaft_radius" "wedge_angle"
 
 ##### DEFINE THE DAKOTA<->SIMULATION INTERFACE #####
 interface

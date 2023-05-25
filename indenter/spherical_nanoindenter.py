@@ -17,7 +17,7 @@ def build_indenter( geom_params ):
     tip_radius = geom_params[ "tip_radius" ]
     shaft_radius = geom_params[ "shaft_radius" ]
     shaft_standoff = geom_params[ "shaft_standoff" ]
-    wedge_angle = geom_params[ "wedge_angle" ]
+    wedge_angle = numpy.deg2rad( geom_params[ "wedge_angle" ] )
 
     x = numpy.zeros( 6 )
     y = numpy.zeros( 6 )
@@ -47,7 +47,7 @@ def build_indenter( geom_params ):
     cubit.cmd( "create curve vertex 5 6" )
     cubit.cmd( "create curve vertex 6 1" )
     cubit.cmd( "create surface curve all" )
-    
+
     cubit.cmd( "sideset 1 curve 4" )
     cubit.cmd( "sideset 2 curve 3" )
     cubit.cmd( "sideset 3 curve 2" )
@@ -62,10 +62,10 @@ def build_indenter( geom_params ):
     cubit.cmd( "sideset 100 name 'indenter_boundaries'")
     cubit.cmd( "nodeset 10 vertex 1" )
     cubit.cmd( "nodeset 10 name 'indenter_tip_node'")
-    
+
     cubit.cmd( "delete vertex all" )
     cubit.cmd( "compress" )
-    
+
     cubit.cmd( "surface 1 rename 'indenter'" )
     cubit.cmd( "surface indenter scheme pave" )
     cubit.cmd( "surface indenter size 0.25" )
@@ -73,13 +73,16 @@ def build_indenter( geom_params ):
     cubit.cmd( "block 1 surface indenter" )
     cubit.cmd( "block 1 element type QUAD" )
     cubit.cmd( "block 1 name 'indenter'" )
+    cubit.cmd( "save cub5 'indenter.cub5' overwrite")
     cubit.cmd( "export mesh 'indenter.e' overwrite")
     generate_mesh_size_function.doIndenter( geom_params )
     cubit.cmd( "delete mesh" )
     cubit.cmd( "import sizing function 'indenter_mesh.e' block 1 variable 'meshSize' time 0.0" )
     cubit.cmd( "surface 1 sizing function exodus min_size 0.25 max_size 5.0" )
     cubit.cmd( "mesh surface indenter" )
+    cubit.cmd( "save cub5 'indenter.cub5' overwrite")
     cubit.cmd( "export mesh 'indenter.e' overwrite")
+    cubit.cmd( "reset" )
 
 def build_target( geom_params ):
     target_width = geom_params[ "target_width" ]
@@ -108,12 +111,14 @@ def build_target( geom_params ):
     cubit.cmd( "block 2 surface 1" )
     cubit.cmd( "block 2 element type QUAD" )
     cubit.cmd( "block 2 name 'material_target'" )
+    cubit.cmd( "save cub5 'target.cub5' overwrite")
     cubit.cmd( "export mesh 'target.e' overwrite")
     generate_mesh_size_function.doTarget( geom_params )
     cubit.cmd( "delete mesh" )
     cubit.cmd( "import sizing function 'target_mesh.e' block 2 variable 'meshSize' time 0.0" )
     cubit.cmd( "surface 1 sizing function exodus min_size 0.25 max_size 5.0" )
     cubit.cmd( "mesh surface 1" )
+    cubit.cmd( "save cub5 'target.cub5' overwrite")
     cubit.cmd( "export mesh 'target.e' overwrite")
     cubit.cmd( "reset" )
 

@@ -32,9 +32,9 @@ def readParamFile( paramFile ):
     fLines = f.readlines()
     params = { "tip_radius":     float( fLines[0].strip() ),
                "shaft_radius":   float( fLines[1].strip() ),
-               "shaft_standoff": float( fLines[2].strip() ),
-               "wedge_angle":    float( fLines[3].strip() ) }
+               "wedge_angle":    float( fLines[2].strip() ) }
     # Fixed values
+    params[ "shaft_standoff" ] = 10
     params[ "target_width" ] = 60
     params[ "target_height" ] = 60
     return params
@@ -59,7 +59,7 @@ def compute_objective( ):
 def compute_constraint( ):
     filename = "indenter_power_law_out.e"
     E = exodus.exodus( filename, array_type="numpy", mode="r" )
-    reaction_force = E.get_global_variable_values( "reaction_force" )
+    reaction_force = E.get_global_variable_values( "react_y" )
     E.close()
     constraint = max( reaction_force )
     return constraint
